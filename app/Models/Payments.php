@@ -10,13 +10,13 @@ class Payments extends Model
     use HasFactory;
 
     protected $primaryKey="id";
-
+    protected $table="payments";
+    protected $connection="mysql";
     protected $fillable=[
         'token',
         'originUrl',
         'statusUpdateUrl',
         'toPay',
-        'currency',
         'clientEmail',
     ];
 

@@ -13,7 +13,7 @@ class EstablishPaymentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class EstablishPaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'originUrl'=>'required|string|max:100',
+            'statusUpdateUrl'=>'required|string|max:100',
+            'toPay'=>'required',
+            'clientEmail'=>'required|string|email|max:50',
         ];
     }
 }

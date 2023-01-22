@@ -2,37 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EstablishPaymentRequest;
+use App\Http\Requests\FinalizePaymentRequest;
 use App\Models\Payments;
+use App\Services\PaymentService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class PaymentsController extends Controller
 {
     /**
-     *
+     * @return View
      */
     public function index(){
-
+        return view('index');
     }
 
     /**
-     * @param Request $request
+     * @param EstablishPaymentRequest $request
+     * @return JsonResponse
      */
-    public function establishPayment(Request $request){
-
+    public function establishPayment(EstablishPaymentRequest $request){
+        $data = $request->validated();
+        $token = (new PaymentService())->establishPayment($data);
+        return Response()->json(['token'=>$token],201);
     }
 
     /**
      * @param Payments $Payments
-     * @param Request $request
+     * @return View
      */
-    public function showPayment(Payments $Payments,Request $request){
-
+    public function showPayment(Payments $Payments){
+        return view('payment',["Payments"=>$Payments]);
     }
 
     /**
-     * @param Request $request
+     * @param FinalizePaymentRequest $request
+     * @return RedirectResponse
      */
-    public function finalizePayment(Request $request){
+    public function finalizePayment(FinalizePaymentRequest $request){
+        $data = $request->validated();
+        $redirectTo =  (new PaymentService())->finalizePayment($data);
+        return Redirect::away($redirectTo);
+    }
 
+    /**
+     * @param FinalizePaymentRequest $request
+     * @return RedirectResponse
+     */
+    public function cancelPayment(FinalizePaymentRequest $request){
+        $data = $request->validated();
+        $redirectTo = (new PaymentService())->cancelPayment($data);
+        return Redirect::away($redirectTo);
     }
 }
