@@ -10,27 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentCancel
+class PaymentStatusUpdateEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $clientEmail;
+    public $status;
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param $clientEmail
+     * @param $Status
      */
-    public function __construct()
+    public function __construct($clientEmail,$Status)
     {
-        //
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+        $this->clientEmail=$clientEmail;
+        $this->status=$Status;
     }
 }

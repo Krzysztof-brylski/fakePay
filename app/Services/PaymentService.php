@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Events\PaymentStatusUpdateEvent;
 use App\Models\Payments;
 use Illuminate\Support\Facades\Http;
 use function League\Flysystem\toArray;
@@ -46,20 +47,18 @@ class PaymentService
      */
     public function finalizePayment(array $data){
         $payment=Payments::where('token','=',$data['token'])->first();
-        //todo send success email
+
         $this->updateStatus($payment,"success");
         $redirect=$payment->originUrl;
-
-        //event(finalized)
+        event(new PaymentStatusUpdateEvent($payment->clientEmail,'success'));
         return $redirect;
     }
     public function cancelPayment(array $data){
         $payment=Payments::where('token','=',$data['token'])->first();
-        //todo send success email
+
         $this->updateStatus($payment,"canceled");
         $redirect=$payment->originUrl;
-
-        //event(canceled)
+        event(new PaymentStatusUpdateEvent($payment->clientEmail,'canceled'));
         return $redirect;
     }
 

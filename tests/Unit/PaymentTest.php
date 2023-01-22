@@ -3,14 +3,17 @@
 namespace Tests\Unit;
 
 use App\Models\Payments;
+use App\Notifications\PaymentStatusNotification;
 use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 class PaymentTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic unit test example.
      *
@@ -64,6 +67,7 @@ class PaymentTest extends TestCase
             'toPay'=>200,
             'clientEmail'=>'test@test.pl'
         ]);
+
         $this->assertDatabaseHas('payments', [
             'token'=>$token,
         ]);

@@ -23,6 +23,7 @@ class FinalizePaymentRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'token'=>"string|required|exists:App\Models\Payments,token"
         ];
