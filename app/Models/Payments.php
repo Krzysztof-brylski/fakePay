@@ -17,6 +17,7 @@ class Payments extends Model
         'originUrl',
         'statusUpdateUrl',
         'toPay',
+        'status',
         'clientEmail',
     ];
 

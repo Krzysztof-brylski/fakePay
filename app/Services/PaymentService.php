@@ -11,15 +11,17 @@ use function League\Flysystem\toArray;
 class PaymentService
 {
     /**
-     * @param $statusUpdateUrl
+     * @param Payments $payments
      * @param $status
      * @return \Illuminate\Http\Client\Response
      */
-    private function updateStatus($statusUpdateUrl, $status){
-        $response = Http::post($statusUpdateUrl, array(
-            'status'=> $status,
-        ));
-        return $response;
+    public function updateStatus($payment, $status){
+        $payment->status=$status;
+        $payment->save();
+//        $response = Http::post($payment->updateStatusUrl, array(
+//            'status'=> $payment,
+//        ));
+        return $payment;
     }
 
 
@@ -28,14 +30,14 @@ class PaymentService
      * @return string
      */
     public function establishPayment(array $data){
-        $Payments = new Payments();
-        $Payments->token=uuid_create();
-        $Payments->originUrl=$data['originUrl'];
-        $Payments->statusUpdateUrl=$data['statusUpdateUrl'];
-        $Payments->toPay=$data['toPay'];
-        $Payments->clientEmail=$data['clientEmail'];
-        $Payments->save();
-        return $Payments->token;
+        $payment = new Payments();
+        $payment->token=uuid_create();
+        $payment->originUrl=$data['originUrl'];
+        $payment->statusUpdateUrl=$data['statusUpdateUrl'];
+        $payment->toPay=$data['toPay'];
+        $payment->clientEmail=$data['clientEmail'];
+        $payment->save();
+        return $payment->token;
     }
 
     /**
@@ -45,20 +47,19 @@ class PaymentService
     public function finalizePayment(array $data){
         $payment=Payments::where('token','=',$data['token'])->first();
         //todo send success email
-        $this->updateStatus($payment->statusUpdateUrl,"finalized");
+        $this->updateStatus($payment,"success");
         $redirect=$payment->originUrl;
-        //event(finalized)
-        $payment->delete();
 
+        //event(finalized)
         return $redirect;
     }
     public function cancelPayment(array $data){
         $payment=Payments::where('token','=',$data['token'])->first();
         //todo send success email
-        $this->updateStatus($payment->statusUpdateUrl,"cancel");
+        $this->updateStatus($payment,"canceled");
         $redirect=$payment->originUrl;
+
         //event(canceled)
-        //$payment->delete();
         return $redirect;
     }
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('originUrl',100);
             $table->string('statusUpdateUrl',100);
             $table->float('toPay')->unsigned();
-           // $table->enum('currency');
+            $table->enum('status',['inProgress','success','canceled'])->default('inProgress');
             $table->string('clientEmail',50);
             $table->timestamps();
         });

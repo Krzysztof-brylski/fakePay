@@ -30,6 +30,7 @@ class PaymentTest extends TestCase
             'originUrl'=>'http://xd.xd.pl',
             'statusUpdateUrl'=>'http://xd.xd.pl',
             'toPay'=>200,
+            'status'=>'inProgress',
             'clientEmail'=>'test@test.pl'
         ]);
     }
@@ -47,7 +48,11 @@ class PaymentTest extends TestCase
             'token'=>$token,
         ]);
         $response=$this->post(route("finalize.payment"),['token'=>$token]);
+        $this->assertDatabaseHas('payments', [
+            'status'=>'success',
+        ]);
         $response->assertStatus(302);
+
         $response->assertRedirect('http://xd.xd.pl');
 
     }
@@ -59,11 +64,13 @@ class PaymentTest extends TestCase
             'toPay'=>200,
             'clientEmail'=>'test@test.pl'
         ]);
-
         $this->assertDatabaseHas('payments', [
             'token'=>$token,
         ]);
         $response=$this->post(route("cancel.payment"),['token'=>$token]);
+        $this->assertDatabaseHas('payments', [
+            'status'=>'canceled',
+        ]);
         $response->assertStatus(302);
         $response->assertRedirect('http://xd.xd.pl');
     }
