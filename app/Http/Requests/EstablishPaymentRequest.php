@@ -27,7 +27,7 @@ class EstablishPaymentRequest extends FormRequest
             'originUrl'=>'required|string|max:100',
             'statusUpdateUrl'=>'required|string|max:100',
             'toPay'=>'required',
-            'clientEmail'=>'required|string|email|max:50',
+            'clientEmail'=>'required|string|max:50',
         ];
     }
 }

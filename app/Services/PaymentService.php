@@ -19,9 +19,9 @@ class PaymentService
     public function updateStatus($payment, $status){
         $payment->status=$status;
         $payment->save();
-//        $response = Http::post($payment->updateStatusUrl, array(
-//            'status'=> $payment,
-//        ));
+        $response = Http::post("$payment->statusUpdateUrl/$payment->token", array(
+            'status'=> $status,
+        ));
         return $payment;
     }
 
