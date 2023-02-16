@@ -44,8 +44,12 @@ class PaymentsController extends Controller
      */
     public function finalizePayment(FinalizePaymentRequest $request){
         $data = $request->validated();
-        $redirectTo =  (new PaymentService())->finalizePayment($data);
-        return Redirect::away($redirectTo);
+        try{
+            $redirectTo =  (new PaymentService())->finalizePayment($data);
+            return Redirect::away($redirectTo);
+        }catch (\Exception $exception) {
+            return Redirect::back()->with(['error' => $exception->getMessage()]);
+        }
     }
 
     /**
@@ -54,7 +58,12 @@ class PaymentsController extends Controller
      */
     public function cancelPayment(FinalizePaymentRequest $request){
         $data = $request->validated();
-        $redirectTo = (new PaymentService())->cancelPayment($data);
-        return Redirect::away($redirectTo);
+        try{
+            $redirectTo = (new PaymentService())->cancelPayment($data);
+            return Redirect::away($redirectTo);
+        }catch (\Exception $exception) {
+            return Redirect::back()->with(['error' => $exception->getMessage()]);
+        }
+
     }
 }
