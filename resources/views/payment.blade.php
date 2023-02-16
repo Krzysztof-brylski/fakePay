@@ -1,5 +1,15 @@
 @extends('app')
 @section('content')
+@if(session('error'))
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{session('error')}}
+            </div>
+        </div>
+    </div>
+@endif
 <div class="d-flex h-100 flex-column justify-content-center align-items-center">
     <h1 >Totally not fake payments, trust me i'll be engineer...</h1>
     <h4 >Payment for: {{$Payments->originUrl}}</h4>
